@@ -1,0 +1,138 @@
+install.packages("readr")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("openair") 
+install.packages("purrr")
+install.packages("lubridate")
+install.packages("ggplot2")
+install.packages("stringr")
+install.packages("knitr")
+install.packages("xts")
+install.packages("zoo")
+install.packages("gridExtra")
+install.packages("astsa")
+install.packages("rvest")
+install.packages("fpp2")
+install.packages("ranger")
+install.packages("broom")
+install.packages("RcppRoll")
+install.packages("reshape2")
+
+install.packages("tidyverse")
+install.packages("DataExplorer")
+install.packages("magrittr")
+install.packages("lubridate")
+install.packages("e1071")
+install.packages("rfm")
+install.packages("caret")
+install.packages("pROC")
+install.packages("randomForest")
+install.packages("con2aqi")
+install.packages("forecast")
+install.packages("PWFSLSmoke")
+library(PWFSLSmoke)
+library(forecast)
+library(con2aqi)
+library(randomForest)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(DataExplorer)
+library(magrittr)
+library(lubridate)
+library(e1071)
+library(rfm)
+library(caret)
+library(pROC)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(openair) 
+library(purrr)
+library(lubridate)
+library(ggplot2)
+library(stringr)
+library(knitr)
+library(xts)
+library(zoo)
+library(gridExtra)
+library(astsa)
+library(rvest)
+library(fpp2)
+library(ranger)
+library(broom)
+library(RcppRoll)
+library(reshape2)
+
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$created_at!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$`PM1.0_CF1_ug/m3`!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$`PM2.5_ATM_ug/m3`!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$`PM10.0_CF1_ug/m3`!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$UptimeMinutes!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$RSSI_dbm!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$Temperature_F!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$`Humidity_%`!='NA')
+air_pollution_data<-filter(air_pollution_data,air_pollution_data$`PM2.5_CF1_ug/m3`!='NA')
+air_pollution_data<-select(air_pollution_data,-c(X10))
+plot_missing(air_pollution_data)
+
+air_pollution_data$created_at<-ymd_hms(air_pollution_data$created_at)
+
+air_pollution_data<-air_pollution_data %>% rename(PM2.5 = `PM2.5_CF1_ug/m3`)
+air_pollution_data<-air_pollution_data %>% rename(PM1.0 = `PM1.0_CF1_ug/m3`)
+air_pollution_data<-air_pollution_data %>% rename(PM10.0 = `PM10.0_CF1_ug/m3`)
+air_pollution_data<-air_pollution_data %>% rename(PM2.5ATM = `PM2.5_ATM_ug/m3`)
+air_pollution_data<-air_pollution_data %>% rename(Humidity = `Humidity_%`)
+
+plot_scatterplot(air_pollution_data)
+plot_scatterplot(x=air_pollution_data$Year,y=air_pollution_data$PM2.5)
+plot(diff(air_pollution_data, lag=4, differences=1,frequency=500))
+autoplot(air_pollution_data)
+plot_density(air_pollution_data)
+plot_intro(air_pollution_data)
+plot_qq(air_pollution_data)
+plot_prcomp(air_pollution_data)
+plot_bar(air_pollution_data)
+plot_histogram(air_pollution_data)
+plot_histogram(air_pollution_data$PM2.5)
+plot_histogram(air_pollution_data$Pressure)
+plot_scatterplot(air_pollution_data)
+plot_scatterplot(corplot)
+
+plot(diff(air_pollution_data, lag=4, differences=1))
+plot(diff(air_pollution_data, lag=4, differences=1,frequency=300))
+
+training<-filter(air_pollution_data,air_pollution_data$Year==2018 || air_pollution_data$Year==2019)
+traning
+View(training)
+testing<-filter(air_pollution_data,air_pollution_data$Year==2020)
+
+ggplot(data=test,aes(Month,PM2.5))+geom_line()
+p<-ggplot(data=test, aes(x=Month, y=PM2.5)) +
+geom_bar(stat="identity")
+
+ggplot(miles, aes(x = created_at, y = PM2.5)) +
+geom_line(aes(color = variable), size = 1) +
+scale_color_manual(values = c("#00AFBB", "#E7B800")) +
+theme_minimal()
+
+p <- ggplot(data = miles, aes(x = created_at, y = PM2.5)) +
+geom_line(color = "#00AFBB", size = 1)
+p
+
+p + stat_smooth(
+color = "#FC4E07", fill = "#FC4E07",
+method = "loess"
+)
+
+train_model<-lm(formula = PM2.5 ~ Temp1 + Rainfall + `Wind speed` + Pressure,
+data = training)
+summary(train_model)
+
+test_model<-lm(formula = PM2.5 ~ Temp1 + Rainfall + `Wind speed` + Pressure,
+data = testing)
+summary(test_model)
+
+cor_plot(train_model)
+
+
